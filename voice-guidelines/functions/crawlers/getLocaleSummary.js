@@ -26,5 +26,5 @@ exports.handler = async function (context, event, callback) {
         callback(error, '')
     }   
 
-  callback(null, JSON.stringify({"Locale Summary": localeSummary}));
+  callback(null, JSON.stringify({"Summary": localeSummary}));
 };
