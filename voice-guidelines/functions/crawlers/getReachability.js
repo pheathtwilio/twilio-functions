@@ -35,8 +35,6 @@ exports.handler = async function (context, event, callback) {
             })
         }
 
-        console.log(reachability)
-
     }catch (error) {
         console.error(`Error: ${error}`)
         callback(error)
