@@ -9,6 +9,13 @@
 
   <body>
 
+    <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <button class="btn  btn-dark" type="button">Filter</button>
+      </div>
+      <input id="filterCountriesInput" type="text" class="form-control" placeholder="Search.." aria-label="" aria-describedby="basic-addon1" onkeyup="filterCountries()">
+    </div>
+
     <ul id="countries-list" class="list-group"></ul>
 
     <script src="client.js"></script>

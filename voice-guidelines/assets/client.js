@@ -11,13 +11,11 @@ const getCountries = async (url) => {
 
     const countryList = await response.json()
 
-    console.log(countryList)
-
     countryList.forEach(country => {
         const listElement = document.createElement('li')
 
         const button = document.createElement('button')
-        button.className = 'collapsible'
+        button.className = 'btn btn-dark collapsible'
         button.innerHTML = country.name
 
         const div = document.createElement('div')
@@ -32,6 +30,26 @@ const getCountries = async (url) => {
 
         countriesListElement.appendChild(listElement)
     })
+}
+
+const filterCountries = () => {
+
+    let input, filter, li
+
+    input = document.getElementById('filterCountriesInput')
+    filter = input.value.toUpperCase()
+    li = countriesListElement.getElementsByTagName('li')
+
+    for(var i=0; i<li.length; i++){
+        let text = li[i].children[0].innerHTML
+
+        if(text.toUpperCase().indexOf(filter) > -1  ){
+            li[i].style.display = ""
+        }else{
+            li[i].style.display = "none"
+        }
+    }
+
 }
 
 window.addEventListener("load", async () => {
