@@ -1,7 +1,10 @@
 const countriesListElement = window.document.getElementById('countries-list')
+const loadingElement = window.document.getElementById('loading')
 const TWILIO = 'https://www.twilio.com/'
 
 const getCountries = async (url) => {
+
+    startLoading()
 
     const response = await fetch('./crawlers/getCountriesFromURL?URL='+url, {
         method: 'GET',
@@ -11,6 +14,8 @@ const getCountries = async (url) => {
       })
 
     const countryList = await response.json()
+
+    stopLoading()
 
     countryList.forEach(country => {
         const listElement = document.createElement('li')
@@ -88,8 +93,6 @@ const listElementClicked = async (event) => {
 
 }
 
-
-
 const filterCountries = () => {
 
     let input, filter, li
@@ -106,6 +109,29 @@ const filterCountries = () => {
         }else{
             li[i].style.display = "none"
         }
+    }
+
+}
+
+const startLoading = () => {
+
+    const button = document.createElement('button')
+    button.className = 'btn btn-dark'
+    button.type = 'button'
+    const span = document.createElement('span')
+    span.className = 'spinner-border spinner-border-sm'
+    span.role = 'status'
+    span.ariaHidden = 'true'
+
+    button.appendChild(span)
+    loadingElement.appendChild(button)
+
+}
+
+const stopLoading = () => {
+
+    while (loadingElement.firstChild) {
+        loadingElement.removeChild(loadingElement.firstChild);
     }
 
 }
