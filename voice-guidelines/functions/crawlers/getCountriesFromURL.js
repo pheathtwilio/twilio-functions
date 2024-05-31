@@ -24,7 +24,7 @@ exports.handler = async function (context, event, callback) {
 
   }else{ // get update
 
-    console.log("Updating Cache")
+    console.log("Retrieving New")
 
     const countries = []
     const url = event.URL
@@ -59,7 +59,7 @@ exports.handler = async function (context, event, callback) {
       .services(context.VOICE_GUIDELINES_SERVICE_SID)
       .documents(context.VOICE_GUIDELINES_COUNTRY_LIST_DOC_SID)
       .update({ data: {
-          countries: JSON.stringify(countries)
+          countries: countries
         },
       })
   
