@@ -90,18 +90,13 @@ const decorateLocaleSummary = (parentNode, localeSummary) => {
 const listElementClicked = async (event) => {
 
     const listElement = event.target.parentNode
-
     const url = listElement.id
 
-    console.log(listElement)
-
-    if(url == 'countries-list'){
-        console.log('Error, no country specified')
-    }else{
-
+    if(listElement instanceof HTMLLIElement){
         const localeSummary = await getLocaleSummary(listElement.id)
         decorateLocaleSummary(listElement, localeSummary)
-
+    }else{
+        console.log('Error, no country specified')
     }
 
 }
