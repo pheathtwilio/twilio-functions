@@ -16,7 +16,7 @@ exports.handler = async function (context, event, callback) {
         $(dtmfTable).find('tr').each((index, row) => {
 
             dtmfs.push({
-                [($(row).find('td:nth-child(1)').text()).trim()]:($(row).find('td:nth-child(2)').text()).trim()
+                [($(row).find('td:nth-child(1)').text()).trim()]:{inbound:$(row).find('td:nth-child(2)').text().trim(), outbound:$(row).find('td:nth-child(3)').text().trim()}
             })
 
         })
@@ -26,5 +26,5 @@ exports.handler = async function (context, event, callback) {
         callback(error)
     }
 
-  callback(null, JSON.stringify({"Caller ID": dtmfs}));
+  callback(null, JSON.stringify({"dtmfs": dtmfs}));
 }

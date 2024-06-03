@@ -60,9 +60,11 @@ const decorateLocaleSummary = (parentNode, localeSummary) => {
 
     let tr = document.createElement('tr')
     let th = document.createElement('th')
+    th.setAttribute('width', '60%')
     th.innerHTML = 'Locale Summary'
     tr.appendChild(th)
     th = document.createElement('th')
+    th.setAttribute('width','40%')
     tr.appendChild(th)
     tbody.appendChild(tr)
 
@@ -110,12 +112,15 @@ const decorateReachability = (parentNode, reachability) => {
 
     let tr = document.createElement('tr')
     let th = document.createElement('th')
+    th.setAttribute('width', '60%')
     th.innerHTML = 'Reachability'
     tr.appendChild(th)
     th = document.createElement('th')
+    th.setAttribute('width', '20%')
     th.innerHTML = 'Inbound'
     tr.appendChild(th)
     th = document.createElement('th')
+    th.setAttribute('width', '20%')
     th.innerHTML = 'Outbound'
     tr.appendChild(th)
     tbody.appendChild(tr)
@@ -168,17 +173,81 @@ const decorateCallerID = (parentNode, callerIDs) => {
 
     let tr = document.createElement('tr')
     let th = document.createElement('th')
+    th.setAttribute('width','60%')
     th.innerHTML = 'Caller ID'
     tr.appendChild(th)
     th = document.createElement('th')
+    th.setAttribute('width', '20%')
     th.innerHTML = 'Inbound'
     tr.appendChild(th)
     th = document.createElement('th')
+    th.setAttribute('width', '20%')
     th.innerHTML = 'Outbound'
     tr.appendChild(th)
     tbody.appendChild(tr)
 
     callerIDs['Caller ID'].forEach((element) => {
+
+        let tr = document.createElement('tr')
+        let td = document.createElement('td')
+        let key = Object.keys(element)[0]
+        let temp = replaceNewLine(key)
+        td.innerHTML = validateString(temp)
+        tr.appendChild(td)
+
+        td = document.createElement('td')
+        temp = replaceNewLine(element[key].inbound)
+        td.innerHTML = validateString(temp)
+        tr.appendChild(td)
+
+        td = document.createElement('td')
+        temp = replaceNewLine(element[key].outbound)
+        td.innerHTML = validateString(temp)
+        tr.appendChild(td)
+
+        tbody.appendChild(tr)
+
+    })
+
+    table.appendChild(tbody)
+    parentNode.appendChild(table)
+
+}
+
+const getDTMF = async (url) => {
+
+    const response = await fetch('./crawlers/getDTMF?URL='+TWILIO+url, {
+        method: 'GET',
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+
+    return await response.json()
+}
+
+const decorateDTMF = (parentNode, dtmfs) => {
+
+    const table = document.createElement('table')
+    table.className = 'table table-striped table-dark table-hover'
+    const tbody = document.createElement('tbody')
+
+    let tr = document.createElement('tr')
+    let th = document.createElement('th')
+    th.setAttribute('width', '60%')
+    th.innerHTML = 'DTMF'
+    tr.appendChild(th)
+    th = document.createElement('th')
+    th.setAttribute('width', '20%')
+    th.innerHTML = 'Inbound'
+    tr.appendChild(th)
+    th = document.createElement('th')
+    th.setAttribute('width', '20%')
+    th.innerHTML = 'Outbound'
+    tr.appendChild(th)
+    tbody.appendChild(tr)
+
+    dtmfs.dtmfs.forEach((element) => {
 
         let tr = document.createElement('tr')
         let td = document.createElement('td')
@@ -220,6 +289,9 @@ const listElementClicked = async (event) => {
 
         const callerids = await getCallerID(listElement.id)
         decorateCallerID(listElement, callerids)
+
+        const dtmfs = await getDTMF(listElement.id)
+        decorateDTMF(listElement, dtmfs)
 
     }else{
         console.log('Error, no country specified')
