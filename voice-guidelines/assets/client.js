@@ -275,6 +275,57 @@ const decorateDTMF = (parentNode, dtmfs) => {
 
 }
 
+const getEmergencyCalling = async (url) => {
+
+    const response = await fetch('./crawlers/getEmergencyCalling?URL='+TWILIO+url, {
+        method: 'GET',
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+
+    return await response.json()
+}
+
+const decorateEmergencyCalling = (parentNode, emergencies) => {
+
+    const table = document.createElement('table')
+    table.className = 'table table-striped table-dark table-hover'
+    const tbody = document.createElement('tbody')
+
+    let tr = document.createElement('tr')
+    let th = document.createElement('th')
+    th.setAttribute('width', '60%')
+    th.innerHTML = 'Emergency Calling'
+    tr.appendChild(th)
+    th = document.createElement('th')
+    th.setAttribute('width','40%')
+    tr.appendChild(th)
+    tbody.appendChild(tr)
+
+    emergencies.emergencies.forEach((element) => {
+        let tr = document.createElement('tr')
+
+        let td = document.createElement('td')
+        let key = Object.keys(element)[0]
+        let temp = replaceNewLine(key)
+        td.innerHTML =  validateString(temp) 
+
+        tr.appendChild(td)
+
+        td = document.createElement('td')
+        temp = replaceNewLine(element[key])
+        td.innerHTML = validateString(temp)
+        tr.appendChild(td)
+
+        tbody.appendChild(tr)
+    })
+    
+    table.appendChild(tbody)
+    parentNode.appendChild(table)
+
+}
+
 const listElementClicked = async (event) => {
 
     const listElement = event.target.parentNode
@@ -292,6 +343,9 @@ const listElementClicked = async (event) => {
 
         const dtmfs = await getDTMF(listElement.id)
         decorateDTMF(listElement, dtmfs)
+
+        const emergencies = await getEmergencyCalling(listElement.id)
+        decorateEmergencyCalling(listElement, emergencies)
 
     }else{
         console.log('Error, no country specified')

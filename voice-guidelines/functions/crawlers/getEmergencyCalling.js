@@ -26,5 +26,5 @@ exports.handler = async function (context, event, callback) {
         callback(error)
     }
 
-  callback(null, JSON.stringify({"Caller ID": emergencies}));
+  callback(null, JSON.stringify({"emergencies": emergencies}));
 }
