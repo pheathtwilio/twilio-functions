@@ -148,6 +148,64 @@ const decorateReachability = (parentNode, reachability) => {
     parentNode.appendChild(table)
 }
 
+const getCallerID = async (url) => {
+
+    const response = await fetch('./crawlers/getCallerID?URL='+TWILIO+url, {
+        method: 'GET',
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+
+    return await response.json()
+}
+
+const decorateCallerID = (parentNode, callerIDs) => {
+
+    const table = document.createElement('table')
+    table.className = 'table table-striped table-dark table-hover'
+    const tbody = document.createElement('tbody')
+
+    let tr = document.createElement('tr')
+    let th = document.createElement('th')
+    th.innerHTML = 'Caller ID'
+    tr.appendChild(th)
+    th = document.createElement('th')
+    th.innerHTML = 'Inbound'
+    tr.appendChild(th)
+    th = document.createElement('th')
+    th.innerHTML = 'Outbound'
+    tr.appendChild(th)
+    tbody.appendChild(tr)
+
+    callerIDs['Caller ID'].forEach((element) => {
+
+        let tr = document.createElement('tr')
+        let td = document.createElement('td')
+        let key = Object.keys(element)[0]
+        let temp = replaceNewLine(key)
+        td.innerHTML = validateString(temp)
+        tr.appendChild(td)
+
+        td = document.createElement('td')
+        temp = replaceNewLine(element[key].inbound)
+        td.innerHTML = validateString(temp)
+        tr.appendChild(td)
+
+        td = document.createElement('td')
+        temp = replaceNewLine(element[key].outbound)
+        td.innerHTML = validateString(temp)
+        tr.appendChild(td)
+
+        tbody.appendChild(tr)
+
+    })
+
+    table.appendChild(tbody)
+    parentNode.appendChild(table)
+
+}
+
 const listElementClicked = async (event) => {
 
     const listElement = event.target.parentNode
@@ -160,6 +218,8 @@ const listElementClicked = async (event) => {
         const reachability = await getReachability(listElement.id)
         decorateReachability(listElement, reachability)
 
+        const callerids = await getCallerID(listElement.id)
+        decorateCallerID(listElement, callerids)
 
     }else{
         console.log('Error, no country specified')
