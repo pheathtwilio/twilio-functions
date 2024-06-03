@@ -71,12 +71,14 @@ const decorateLocaleSummary = (parentNode, localeSummary) => {
 
         let td = document.createElement('td')
         let key = Object.keys(element)[0]
-        td.innerHTML =  validateString(JSON.stringify(key)) 
+        let temp = replaceNewLine(key)
+        td.innerHTML =  validateString(temp) 
 
         tr.appendChild(td)
 
         td = document.createElement('td')
-        td.innerHTML = validateString(JSON.stringify(element[key]))
+        temp = replaceNewLine(element[key])
+        td.innerHTML = validateString(temp)
         tr.appendChild(td)
 
         tbody.appendChild(tr)
@@ -87,6 +89,65 @@ const decorateLocaleSummary = (parentNode, localeSummary) => {
 
 }
 
+const getReachability = async (url) => {
+
+    const response = await fetch('./crawlers/getReachability?URL='+TWILIO+url, {
+        method: 'GET',
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+
+
+    return await response.json()
+}
+
+const decorateReachability = (parentNode, reachability) => {
+
+    const table = document.createElement('table')
+    table.className = 'table table-striped table-dark table-hover'
+    const tbody = document.createElement('tbody')
+
+    let tr = document.createElement('tr')
+    let th = document.createElement('th')
+    th.innerHTML = 'Reachability'
+    tr.appendChild(th)
+    th = document.createElement('th')
+    th.innerHTML = 'Inbound'
+    tr.appendChild(th)
+    th = document.createElement('th')
+    th.innerHTML = 'Outbound'
+    tr.appendChild(th)
+    tbody.appendChild(tr)
+
+    reachability.Reachability.forEach((element) => {
+
+        let tr = document.createElement('tr')
+        let td = document.createElement('td')
+        let key = Object.keys(element)[0]
+        let temp = replaceNewLine(key)
+        td.innerHTML = validateString(temp)
+        tr.appendChild(td)
+
+        td = document.createElement('td')
+        temp = replaceNewLine(element[key].inbound)
+        td.innerHTML = validateString(temp)
+        tr.appendChild(td)
+
+        td = document.createElement('td')
+        temp = replaceNewLine(element[key].outbound)
+        td.innerHTML = validateString(temp)
+        tr.appendChild(td)
+
+        tbody.appendChild(tr)
+
+    })
+
+
+    table.appendChild(tbody)
+    parentNode.appendChild(table)
+}
+
 const listElementClicked = async (event) => {
 
     const listElement = event.target.parentNode
@@ -95,6 +156,11 @@ const listElementClicked = async (event) => {
     if(listElement instanceof HTMLLIElement){
         const localeSummary = await getLocaleSummary(listElement.id)
         decorateLocaleSummary(listElement, localeSummary)
+
+        const reachability = await getReachability(listElement.id)
+        decorateReachability(listElement, reachability)
+
+
     }else{
         console.log('Error, no country specified')
     }
@@ -146,6 +212,10 @@ const stopLoading = () => {
 
 const validateString = (strToReplace) => {
     return strToReplace.replace(/['"]+/g, '')
+}
+
+const replaceNewLine = (strToReplace) => {
+    return strToReplace.replace(/\r?\n|\r/g, ' - ')
 }
 
 window.addEventListener("load", async () => {
