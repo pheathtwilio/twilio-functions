@@ -12,14 +12,27 @@ exports.handler = async function (context, event, callback) {
         const $ = cheerio.load(data)
 
         const emergencyCallingTable = '#guideline-tables > div > div:nth-child(5) > div > div > table > tbody'
+        const emergencyCallingTable_2 = '#base-page-7c9c6637a6 > main > section.section-wrapper.default > div > div:nth-child(5) > div > div > table > tbody'
 
-        $(emergencyCallingTable).find('tr').each((index, row) => {
+        if($(emergencyCallingTable).find('tr').children().length > 0){
+            $(emergencyCallingTable).find('tr').each((index, row) => {
 
-            emergencies.push({
-                [($(row).find('td:nth-child(1)').text()).trim()]:($(row).find('td:nth-child(2)').text()).trim()
+                emergencies.push({
+                    [($(row).find('td:nth-child(1)').text()).trim()]:($(row).find('td:nth-child(2)').text()).trim()
+                })
+    
             })
+        }else{
+            $(emergencyCallingTable_2).find('tr').each((index, row) => {
 
-        })
+                emergencies.push({
+                    [($(row).find('td:nth-child(1)').text()).trim()]:($(row).find('td:nth-child(2)').text()).trim()
+                })
+    
+            })
+        }
+
+        
 
     }catch (error) {
         console.error(`Error: ${error}`)
